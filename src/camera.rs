@@ -13,7 +13,7 @@ pub struct Camera {
 impl Camera {
     pub fn new(viewport: Viewport, focal_length: f32) -> Self {
         let origin = Vec3::default();
-        let horizontal = Vec3::new(viewport.height, 0.0, 0.0);
+        let horizontal = Vec3::new(viewport.width, 0.0, 0.0);
         Self {
             viewport,
             focal_length,
@@ -35,7 +35,7 @@ impl Viewport {
     pub fn new(aspect_ratio: AspectRatio, height: f32) -> Self {
         Self {
             height,
-            width: aspect_ratio.as_f32(),
+            width: aspect_ratio.as_f32() * height,
         }
     }
 }
