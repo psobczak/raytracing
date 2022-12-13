@@ -2,16 +2,18 @@ mod camera;
 mod color;
 mod ray;
 mod render;
-mod vec3;
 mod sphere;
+mod vec3;
 
 use camera::{Camera, Viewport};
+use ray::Ray;
 use render::{Console, Renderer};
+use vec3::Vec3;
 
 fn main() {
     let aspect_ratio: AspectRatio = (16.0, 9.0).into();
 
-    let image = Image::new(1000, aspect_ratio);
+    let image = Image::new(400, aspect_ratio);
 
     let viewport = Viewport::new(aspect_ratio, 2.0);
     let camera = Camera::new(viewport, 1.0);
@@ -53,3 +55,13 @@ impl From<(f32, f32)> for AspectRatio {
         Self(value.0, value.1)
     }
 }
+
+pub fn hit_sphere(center: Vec3, radius: f32, ray: &Ray) -> bool {
+    let oc = ray.origin() - center;
+    let a = ray.direction().dot(ray.direction());
+    let b = 2.0 * oc.dot(ray.direction());
+    let c = oc.dot(&oc) - (radius * radius);
+    let discriminant = b * b - 4.0 * a * c;
+    discriminant > 0.0
+}
+
