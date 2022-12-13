@@ -1,6 +1,6 @@
-use std::ops::{Add, Mul, Neg, Sub};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default, Clone, Copy)]
 pub struct Vec3 {
     x: f32,
     y: f32,
@@ -32,8 +32,12 @@ impl Vec3 {
         f32::sqrt(self.length_squared())
     }
 
-    pub fn dot(&self, other: Vec3) -> f32 {
+    pub fn dot(&self, other: &Vec3) -> f32 {
         (self.x * other.x) + (self.y * other.y) + (self.z * other.z)
+    }
+
+    pub fn unit_vector(vector: &Vec3) -> Vec3 {
+        vector.length() / vector
     }
 }
 
@@ -80,6 +84,22 @@ macro_rules! impl_single_type_operations {
 
             fn neg(self) -> Self::Output {
                 Vec3::new(-self.x, -self.y, -self.z)
+            }
+        }
+
+        impl Div<$type> for f32 {
+            type Output = Vec3;
+
+            fn div(self, rhs: $type) -> Self::Output {
+                (1.0 / self) * rhs
+            }
+        }
+
+        impl Div<f32> for $type {
+            type Output = Vec3;
+
+            fn div(self, rhs: f32) -> Self::Output {
+                (1.0 / rhs) * self
             }
         }
     };

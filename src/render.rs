@@ -1,4 +1,6 @@
+use crate::camera::Camera;
 use crate::color::Color;
+use crate::ray::Ray;
 use crate::Image;
 
 pub trait Renderer {
@@ -8,11 +10,12 @@ pub trait Renderer {
 #[derive(Debug)]
 pub struct Console<'a> {
     image: &'a Image,
+    camera: &'a Camera,
 }
 
 impl<'a> Console<'a> {
-    pub fn new(image: &'a Image) -> Self {
-        Self { image }
+    pub fn new(image: &'a Image, camera: &'a Camera) -> Self {
+        Self { image, camera }
     }
 }
 
@@ -24,11 +27,21 @@ impl<'a> Renderer for Console<'a> {
 
         for i in 0..self.image.height {
             for j in 0..self.image.width {
-                let r = i as f32 / (self.image.width - 1) as f32;
-                let g = j as f32 / (self.image.height - 1) as f32;
-                let b = 0.25_f32;
+                let u = i as f32 / (self.image.width - 1) as f32;
+                let v = j as f32 / (self.image.height - 1) as f32;
 
-                let color = Color::new(r, g, b);
+                let ray = Ray::new(
+                    self.camera.origin,
+                    self.camera.lower_left_corner
+                        + (u * self.camera.horizontal)
+                        + (v * self.camera.vertival)
+                        - self.camera.origin,
+                );
+
+                let start_color = Color::new(1.0, 1.0, 1.0);
+                let end_color = Color::new(0.5, 0.7, 1.0);
+
+                let color = ray.ray_color(start_color, end_color);
                 println!("{color}")
             }
         }
