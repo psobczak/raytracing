@@ -37,37 +37,61 @@ impl Vec3 {
     }
 }
 
-impl Neg for Vec3 {
-    type Output = Vec3;
+macro_rules! impl_double_type_operations {
+    ($first_type:ty, $second_type:ty) => {
+        impl Add<$first_type> for $second_type {
+            type Output = Vec3;
 
-    fn neg(self) -> Self::Output {
-        Vec3::new(-self.x, -self.y, -self.z)
-    }
+            fn add(self, rhs: $first_type) -> Self::Output {
+                Vec3::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+            }
+        }
+
+        impl Sub<$first_type> for $second_type {
+            type Output = Vec3;
+
+            fn sub(self, rhs: $first_type) -> Self::Output {
+                Vec3::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
+            }
+        }
+    };
 }
 
-impl Add for Vec3 {
-    type Output = Vec3;
+macro_rules! impl_single_type_operations {
+    ($type:ty) => {
+        impl Mul<$type> for f32 {
+            type Output = Vec3;
 
-    fn add(self, rhs: Self) -> Self::Output {
-        Vec3::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
-    }
+            fn mul(self, rhs: $type) -> Self::Output {
+                Vec3::new(self * rhs.x, self * rhs.y, self * rhs.z)
+            }
+        }
+
+        impl Mul<f32> for $type {
+            type Output = Vec3;
+
+            fn mul(self, rhs: f32) -> Self::Output {
+                Vec3::new(self.x * rhs, self.y * rhs, self.z * rhs)
+            }
+        }
+
+        impl Neg for $type {
+            type Output = Vec3;
+
+            fn neg(self) -> Self::Output {
+                Vec3::new(-self.x, -self.y, -self.z)
+            }
+        }
+    };
 }
 
-impl Sub for Vec3 {
-    type Output = Vec3;
+impl_double_type_operations!(Vec3, Vec3);
+impl_double_type_operations!(&Vec3, &Vec3);
+impl_double_type_operations!(Vec3, &Vec3);
+impl_double_type_operations!(&Vec3, Vec3);
 
-    fn sub(self, rhs: Self) -> Self::Output {
-        Vec3::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
-    }
-}
-
-impl Mul<f32> for Vec3 {
-    type Output = Vec3;
-
-    fn mul(self, rhs: f32) -> Self::Output {
-        Vec3::new(self.x * rhs, self.y * rhs, self.z * rhs)
-    }
-}
+impl_single_type_operations!(Vec3);
+impl_single_type_operations!(&Vec3);
 
 #[cfg(test)]
 mod tests {
