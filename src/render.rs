@@ -1,3 +1,4 @@
+use crate::color::Color;
 use crate::Image;
 
 pub trait Renderer {
@@ -27,11 +28,8 @@ impl<'a> Renderer for Console<'a> {
                 let g = j as f32 / (self.image.height - 1) as f32;
                 let b = 0.25_f32;
 
-                let ir = (255.99 * r) as usize;
-                let ig = (255.99 * g) as usize;
-                let ib = (255.99 * b) as usize;
-
-                println!("{ir} {ig} {ib}")
+                let color = Color::new(r, g, b);
+                println!("{color}")
             }
         }
     }
