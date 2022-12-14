@@ -34,7 +34,7 @@ impl<'a> Renderer for Console<'a> {
                     self.camera.origin,
                     self.camera.lower_left_corner
                         + (u * self.camera.horizontal)
-                        + (v * self.camera.vertival)
+                        + (v * self.camera.vertical)
                         - self.camera.origin,
                 );
 

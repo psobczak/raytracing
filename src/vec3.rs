@@ -39,6 +39,10 @@ impl Vec3 {
     pub fn unit_vector(vector: &Vec3) -> Vec3 {
         vector.length() / vector
     }
+
+    pub fn dot_product(first: &Vec3, other: &Vec3) -> f32 {
+        (first.x * other.x) + (first.y * other.y) + (first.z * other.z)
+    }
 }
 
 macro_rules! impl_double_type_operations {
@@ -138,5 +142,13 @@ mod tests {
         let first = Vec3::new(-10.0, 0.0, 25.0);
         let expected = Vec3::new(-25.0, 0.0, 62.5);
         assert_eq!(first * 2.5, expected)
+    }
+
+    #[test]
+    fn dot_product() {
+        let first = Vec3::new(1.0, 10.0, -25.0);
+        let other = Vec3::new(12.1, -52.2, 0.0);
+        assert_eq!(first.dot(&other), -509.9);
+        assert_eq!(Vec3::dot_product(&first, &other), -509.9);
     }
 }
