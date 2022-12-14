@@ -20,7 +20,7 @@ impl Ray {
     }
 
     pub fn at(&self, t: f32) -> Vec3 {
-        &self.origin + (t * &self.direction)
+        self.origin + (t * self.direction)
     }
 
     pub fn ray_color(&self, start_color: Color, end_color: Color) -> Color {

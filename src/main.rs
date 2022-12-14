@@ -44,10 +44,6 @@ impl AspectRatio {
     pub fn as_f32(&self) -> f32 {
         self.0 / self.1
     }
-
-    pub fn as_usize(&self) -> usize {
-        (self.0 / self.1) as usize
-    }
 }
 
 impl From<(f32, f32)> for AspectRatio {
@@ -64,4 +60,3 @@ pub fn hit_sphere(center: Vec3, radius: f32, ray: &Ray) -> bool {
     let discriminant = b * b - 4.0 * a * c;
     discriminant > 0.0
 }
-
