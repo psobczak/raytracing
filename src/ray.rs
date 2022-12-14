@@ -24,8 +24,11 @@ impl Ray {
     }
 
     pub fn ray_color(&self, start_color: Color, end_color: Color) -> Color {
-        if hit_sphere(Vec3::new(0.0, 0.0, -1.0), 0.5, self) {
-            return Color::new(1.0, 0.0, 0.0);
+        let t = hit_sphere(Vec3::new(0.0, 0.0, -1.0), 0.5, self);
+
+        if t > 0.0 {
+            let n = Vec3::unit_vector(&(&self.at(t) - Vec3::new(0.0, 0.0, -1.0)));
+            return 0.5 * Color::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
         }
 
         let unit_direction = Vec3::unit_vector(self.direction());

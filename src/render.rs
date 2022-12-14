@@ -25,8 +25,8 @@ impl<'a> Renderer for Console<'a> {
         println!("{} {}", self.image.width, self.image.height);
         println!("255");
 
-        for i in 0..self.image.height {
-            for j in 0..self.image.width {
+        for i in (0..self.image.height).into_iter().rev() {
+            for j in (0..self.image.width).into_iter().rev() {
                 let u = i as f32 / (self.image.width - 1) as f32;
                 let v = j as f32 / (self.image.height - 1) as f32;
 

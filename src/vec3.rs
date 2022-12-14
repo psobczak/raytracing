@@ -151,4 +151,10 @@ mod tests {
         assert_eq!(first.dot(&other), -509.9);
         assert_eq!(Vec3::dot_product(&first, &other), -509.9);
     }
+
+    #[test]
+    fn division() {
+        let first = Vec3::new(1.0, 10.0, -20.0);
+        assert_eq!(first / 2.0, Vec3::new(0.5, 5.0, -10.0))
+    }
 }
