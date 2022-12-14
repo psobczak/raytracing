@@ -139,4 +139,11 @@ mod tests {
         let expected = Vec3::new(-25.0, 0.0, 62.5);
         assert_eq!(first * 2.5, expected)
     }
+
+    #[test]
+    fn dot_product() {
+        let first = Vec3::new(2.0, -1.0, 0.0);
+        let other = Vec3::new(10.0, 10.0, 1.0);
+        assert_eq!(first.dot(&other), 10.0);
+    }
 }
