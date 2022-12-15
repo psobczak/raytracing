@@ -1,4 +1,8 @@
-use crate::{color::Color, hit_sphere, vec3::Vec3};
+use crate::{
+    color::Color,
+    hittable::{HitRecord, Hittable, HittableList},
+    vec3::Vec3,
+};
 
 #[derive(Debug)]
 pub struct Ray {
@@ -23,12 +27,11 @@ impl Ray {
         self.origin + (t * self.direction)
     }
 
-    pub fn ray_color(&self, start_color: Color, end_color: Color) -> Color {
-        let t = hit_sphere(Vec3::new(0.0, 0.0, -1.0), 0.5, self);
+    pub fn ray_color(&self, start_color: Color, end_color: Color, world: &HittableList) -> Color {
+        let mut hit_record = HitRecord::default();
 
-        if t > 0.0 {
-            let n = Vec3::unit_vector(&(&self.at(t) - Vec3::new(0.0, 0.0, -1.0)));
-            return 0.5 * Color::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
+        if world.hit(self, 0.0, f32::INFINITY, &mut hit_record) {
+            return 0.5 * Color::from_vec3(hit_record.normal + Vec3::ONE);
         }
 
         let unit_direction = Vec3::unit_vector(self.direction());

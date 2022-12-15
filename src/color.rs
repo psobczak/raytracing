@@ -1,5 +1,7 @@
 use std::{fmt::Display, ops::Add, ops::Mul};
 
+use crate::vec3::Vec3;
+
 #[derive(Debug)]
 pub struct Color {
     r: f32,
@@ -14,6 +16,14 @@ impl Color {
 
     pub fn lerp(start: Color, end: Color, t: f32) -> Color {
         (1.0 - t) * start + (t * end)
+    }
+
+    pub fn from_vec3(vec: Vec3) -> Self {
+        Self {
+            r: vec.x(),
+            g: vec.y(),
+            b: vec.z(),
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 use crate::camera::Camera;
 use crate::color::Color;
+use crate::hittable::HittableList;
 use crate::ray::Ray;
 use crate::Image;
 
@@ -11,11 +12,16 @@ pub trait Renderer {
 pub struct Console<'a> {
     image: &'a Image,
     camera: &'a Camera,
+    world: &'a HittableList,
 }
 
 impl<'a> Console<'a> {
-    pub fn new(image: &'a Image, camera: &'a Camera) -> Self {
-        Self { image, camera }
+    pub fn new(image: &'a Image, camera: &'a Camera, world: &'a HittableList) -> Self {
+        Self {
+            image,
+            camera,
+            world,
+        }
     }
 }
 
@@ -25,8 +31,8 @@ impl<'a> Renderer for Console<'a> {
         println!("{} {}", self.image.width, self.image.height);
         println!("255");
 
-        for i in (0..self.image.height).into_iter().rev() {
-            for j in (0..self.image.width).into_iter().rev() {
+        for j in (0..self.image.height).into_iter().rev() {
+            for i in 0..self.image.width {
                 let u = i as f32 / (self.image.width - 1) as f32;
                 let v = j as f32 / (self.image.height - 1) as f32;
 
@@ -41,7 +47,7 @@ impl<'a> Renderer for Console<'a> {
                 let start_color = Color::new(1.0, 1.0, 1.0);
                 let end_color = Color::new(0.5, 0.7, 1.0);
 
-                let color = ray.ray_color(start_color, end_color);
+                let color = ray.ray_color(start_color, end_color, self.world);
                 println!("{color}")
             }
         }
