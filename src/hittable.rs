@@ -44,19 +44,9 @@ impl HittableList {
 
 impl Hittable for HittableList {
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32, hit_records: &mut HitRecord) -> bool {
-        let temp_record = HitRecord::default();
-        let mut hit_anything = false;
-        let mut closest_so_far = t_max;
-
-        for hittable in self.0.iter() {
-            if hittable.hit(ray, t_min, t_max, hit_records) {
-                hit_anything = true;
-                closest_so_far = temp_record.t;
-                *hit_records = temp_record
-            }
-        }
-
-        hit_anything
+        self.0
+            .iter()
+            .any(|object| object.hit(ray, t_min, t_max, hit_records))
     }
 }
 
