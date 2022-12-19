@@ -27,12 +27,15 @@ impl Ray {
         self.origin + (t * self.direction)
     }
 
-    pub fn ray_color(&self, start_color: Color, end_color: Color, world: &HittableList) -> Color {
+    pub fn color(&self, world: &HittableList) -> Color {
         let mut hit_record = HitRecord::default();
 
         if world.hit(self, 0.0, f32::INFINITY, &mut hit_record) {
             return 0.5 * Color::from_vec3(hit_record.normal + Vec3::ONE);
         }
+
+        let start_color = Color::new(1.0, 1.0, 1.0);
+        let end_color = Color::new(0.5, 0.7, 1.0);
 
         let unit_direction = Vec3::unit_vector(self.direction());
         let t = 0.5 * (unit_direction.y() + 1.0);

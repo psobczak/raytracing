@@ -15,7 +15,7 @@ use vec3::Vec3;
 fn main() {
     let aspect_ratio: AspectRatio = (16.0, 9.0).into();
 
-    let image = Image::new(1000, aspect_ratio);
+    let image = Image::new(100, aspect_ratio, 100);
 
     let mut world = HittableList::default();
     world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5));
@@ -32,13 +32,15 @@ fn main() {
 pub struct Image {
     width: usize,
     height: usize,
+    samples_per_pixel: usize,
 }
 
 impl Image {
-    fn new(width: usize, aspect_ratio: AspectRatio) -> Self {
+    fn new(width: usize, aspect_ratio: AspectRatio, samples_per_pixel: usize) -> Self {
         Self {
             width,
             height: (width as f32 / aspect_ratio.as_f32()) as usize,
+            samples_per_pixel,
         }
     }
 }
@@ -58,13 +60,13 @@ impl From<(f32, f32)> for AspectRatio {
     }
 }
 
-pub fn clamp(samples: usize, min: f32, max: f32) -> f32 {
-    if (samples as f32) < min {
+pub fn clamp(x: f32, min: f32, max: f32) -> f32 {
+    if x < min {
         return min;
     }
-    if (samples as f32) > max {
+    if x > max {
         return max;
     }
 
-    samples as f32
+    x
 }

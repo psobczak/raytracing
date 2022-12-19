@@ -1,8 +1,8 @@
-use std::{fmt::Display, ops::Add, ops::Mul};
+use std::{ops::Add, ops::Mul};
 
-use crate::vec3::Vec3;
+use crate::{clamp, vec3::Vec3};
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Color {
     r: f32,
     g: f32,
@@ -25,16 +25,22 @@ impl Color {
             b: vec.z(),
         }
     }
-}
 
-impl Display for Color {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
+    pub fn write(&self, samples_per_pixel: usize) {
+        let scale = 1.0 / samples_per_pixel as f32;
+        let mut r = self.r;
+        let mut g = self.g;
+        let mut b = self.b;
+
+        r *= scale;
+        g *= scale;
+        b *= scale;
+
+        println!(
             "{} {} {}",
-            (self.r * 255.999) as usize,
-            (self.g * 255.999) as usize,
-            (self.b * 255.999) as usize
+            (256.0 * clamp(r, 0.0, 0.999)) as usize,
+            (256.0 * clamp(g, 0.0, 0.999)) as usize,
+            (256.0 * clamp(b, 0.0, 0.999)) as usize
         )
     }
 }

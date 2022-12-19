@@ -1,7 +1,8 @@
+use rand::Rng;
+
 use crate::camera::Camera;
 use crate::color::Color;
 use crate::hittable::HittableList;
-use crate::ray::Ray;
 use crate::Image;
 
 pub trait Renderer {
@@ -31,24 +32,20 @@ impl<'a> Renderer for Console<'a> {
         println!("{} {}", self.image.width, self.image.height);
         println!("255");
 
+        let mut rng = rand::thread_rng();
+
         for j in (0..self.image.height).into_iter().rev() {
             for i in 0..self.image.width {
-                let u = i as f32 / (self.image.width - 1) as f32;
-                let v = j as f32 / (self.image.height - 1) as f32;
-
-                let ray = Ray::new(
-                    self.camera.origin,
-                    self.camera.lower_left_corner
-                        + (u * self.camera.horizontal)
-                        + (v * self.camera.vertical)
-                        - self.camera.origin,
-                );
-
-                let start_color = Color::new(1.0, 1.0, 1.0);
-                let end_color = Color::new(0.5, 0.7, 1.0);
-
-                let color = ray.ray_color(start_color, end_color, self.world);
-                println!("{color}")
+                (0..self.image.samples_per_pixel)
+                    .map(|_| {
+                        (
+                            (i as f32 + rng.gen::<f32>()) / (self.image.width - 1) as f32, // u
+                            (j as f32 + rng.gen::<f32>()) / (self.image.height - 1) as f32, // v
+                        )
+                    })
+                    .map(|(u, v)| self.camera.get_ray(u, v))
+                    .fold(Color::default(), |acc, ray| acc + ray.color(self.world))
+                    .write(self.image.samples_per_pixel);
             }
         }
     }
