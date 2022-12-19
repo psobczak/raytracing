@@ -21,8 +21,8 @@ fn main() {
     world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5));
     world.add(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0));
 
-    let viewport = Viewport::new(aspect_ratio, 2.0);
-    let camera = Camera::new(viewport, 1.0);
+    let viewport = Viewport::new(aspect_ratio, 2.0, 1.0);
+    let camera = Camera::new(viewport);
 
     let console_renderer = Console::new(&image, &camera, &world);
     console_renderer.render();
@@ -56,4 +56,15 @@ impl From<(f32, f32)> for AspectRatio {
     fn from(value: (f32, f32)) -> Self {
         Self(value.0, value.1)
     }
+}
+
+pub fn clamp(samples: usize, min: f32, max: f32) -> f32 {
+    if (samples as f32) < min {
+        return min;
+    }
+    if (samples as f32) > max {
+        return max;
+    }
+
+    samples as f32
 }
