@@ -34,7 +34,16 @@ fn main() {
         material_ground,
     ));
     world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, material_center));
-    world.add(Sphere::new(Vec3::new(-1.0, 0.0, -1.0), 0.5, material_left));
+    world.add(Sphere::new(
+        Vec3::new(-1.0, 0.0, -1.0),
+        0.5,
+        Rc::clone(&material_left),
+    ));
+    world.add(Sphere::new(
+        Vec3::new(-1.0, 0.0, -1.0),
+        -0.4,
+        Rc::clone(&material_left),
+    ));
     world.add(Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, material_right));
 
     let viewport = Viewport::new(aspect_ratio, 2.0, 1.0);

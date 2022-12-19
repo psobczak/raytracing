@@ -14,11 +14,11 @@ pub struct Sphere {
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f32, material: Rc<dyn Material>) -> Self {
+    pub fn new(center: Vec3, radius: f32, material: Rc<impl Material + 'static>) -> Self {
         Self {
             center,
             radius,
-            material: Rc::clone(&material),
+            material,
         }
     }
 }
