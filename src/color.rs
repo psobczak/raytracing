@@ -32,9 +32,9 @@ impl Color {
         let mut g = self.g;
         let mut b = self.b;
 
-        r *= scale;
-        g *= scale;
-        b *= scale;
+        r = f32::sqrt(scale * r);
+        g = f32::sqrt(scale * g);
+        b = f32::sqrt(scale * b);
 
         println!(
             "{} {} {}",
