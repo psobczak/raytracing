@@ -71,6 +71,15 @@ impl Vec3 {
     pub fn random_unit_vector() -> Vec3 {
         Self::unit_vector(&Self::random_in_unit_sphere())
     }
+
+    pub fn random_in_hemisphere(normal: &Vec3) -> Vec3 {
+        let in_unit_sphere = Self::random_in_unit_sphere();
+        if in_unit_sphere.dot(normal) > 0.0 {
+            in_unit_sphere
+        } else {
+            -in_unit_sphere
+        }
+    }
 }
 
 macro_rules! impl_double_type_operations {

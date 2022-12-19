@@ -15,7 +15,7 @@ use vec3::Vec3;
 fn main() {
     let aspect_ratio: AspectRatio = (16.0, 9.0).into();
 
-    let image = Image::new(1000, aspect_ratio, 100, 10);
+    let image = Image::new(1000, aspect_ratio, 100, 50);
 
     let mut world = HittableList::default();
     world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5));
