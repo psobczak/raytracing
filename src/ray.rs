@@ -27,11 +27,17 @@ impl Ray {
         self.origin + (t * self.direction)
     }
 
-    pub fn color(&self, world: &HittableList) -> Color {
+    pub fn color(&self, world: &HittableList, depth: usize) -> Color {
         let mut hit_record = HitRecord::default();
 
+        if depth <= 0 {
+            return Color::default();
+        }
+
         if world.hit(self, 0.0, f32::INFINITY, &mut hit_record) {
-            return 0.5 * Color::from_vec3(hit_record.normal + Vec3::ONE);
+            let target = hit_record.point + hit_record.normal + Vec3::random_in_unit_sphere();
+            return 0.5
+                * Ray::new(hit_record.point, target - hit_record.point).color(world, depth - 1);
         }
 
         let start_color = Color::new(1.0, 1.0, 1.0);

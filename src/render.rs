@@ -44,7 +44,9 @@ impl<'a> Renderer for Console<'a> {
                         )
                     })
                     .map(|(u, v)| self.camera.get_ray(u, v))
-                    .fold(Color::default(), |acc, ray| acc + ray.color(self.world))
+                    .fold(Color::default(), |acc, ray| {
+                        acc + ray.color(self.world, self.image.max_depth)
+                    })
                     .write(self.image.samples_per_pixel);
             }
         }

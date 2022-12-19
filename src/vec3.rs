@@ -1,5 +1,7 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
+use rand::Rng;
+
 #[derive(Debug, PartialEq, Default, Clone, Copy)]
 pub struct Vec3 {
     x: f32,
@@ -44,6 +46,26 @@ impl Vec3 {
 
     pub fn dot_product(first: &Vec3, other: &Vec3) -> f32 {
         (first.x * other.x) + (first.y * other.y) + (first.z * other.z)
+    }
+
+    pub fn random(min: f32, max: f32) -> Vec3 {
+        let mut rng = rand::thread_rng();
+        Vec3::new(
+            rng.gen_range(min..max),
+            rng.gen_range(min..max),
+            rng.gen_range(min..max),
+        )
+    }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let point = Vec3::random(-1.0, 1.0);
+            if point.length_squared() >= 1.0 {
+                continue;
+            }
+
+            return point;
+        }
     }
 }
 

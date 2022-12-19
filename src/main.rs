@@ -15,7 +15,7 @@ use vec3::Vec3;
 fn main() {
     let aspect_ratio: AspectRatio = (16.0, 9.0).into();
 
-    let image = Image::new(100, aspect_ratio, 100);
+    let image = Image::new(1000, aspect_ratio, 100, 10);
 
     let mut world = HittableList::default();
     world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5));
@@ -33,14 +33,21 @@ pub struct Image {
     width: usize,
     height: usize,
     samples_per_pixel: usize,
+    max_depth: usize,
 }
 
 impl Image {
-    fn new(width: usize, aspect_ratio: AspectRatio, samples_per_pixel: usize) -> Self {
+    fn new(
+        width: usize,
+        aspect_ratio: AspectRatio,
+        samples_per_pixel: usize,
+        max_depth: usize,
+    ) -> Self {
         Self {
             width,
             height: (width as f32 / aspect_ratio.as_f32()) as usize,
             samples_per_pixel,
+            max_depth,
         }
     }
 }
