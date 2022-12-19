@@ -9,7 +9,6 @@ pub trait Renderer {
     fn render(&self) {}
 }
 
-#[derive(Debug)]
 pub struct Console<'a> {
     image: &'a Image,
     camera: &'a Camera,

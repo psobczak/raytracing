@@ -4,7 +4,7 @@ use crate::{
     vec3::Vec3,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Ray {
     origin: Vec3,
     direction: Vec3,
@@ -27,17 +27,26 @@ impl Ray {
         self.origin + (t * self.direction)
     }
 
-    pub fn color(&self, world: &HittableList, depth: usize) -> Color {
+    pub fn color(self, world: &HittableList, depth: usize) -> Color {
         let mut hit_record = HitRecord::default();
 
-        if depth <= 0 {
+        if depth == 0 {
             return Color::default();
         }
 
-        if world.hit(self, 0.001, f32::INFINITY, &mut hit_record) {
-            let target = hit_record.point + Vec3::random_in_hemisphere(&hit_record.normal);
-            return 0.5
-                * Ray::new(hit_record.point, target - hit_record.point).color(world, depth - 1);
+        if world.hit(&self, 0.001, f32::INFINITY, &mut hit_record) {
+            let mut attenuation = Color::default();
+            let mut scattered = Ray::default();
+
+            let Some(ref material) = hit_record.material else {
+                panic!("no material")
+            };
+
+            if material.scatter(&self, &hit_record, &mut attenuation, &mut scattered) {
+                return attenuation * scattered.color(world, depth - 1);
+            } else {
+                return Color::default();
+            }
         }
 
         let start_color = Color::new(1.0, 1.0, 1.0);

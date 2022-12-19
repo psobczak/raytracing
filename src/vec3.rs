@@ -80,6 +80,15 @@ impl Vec3 {
             -in_unit_sphere
         }
     }
+
+    pub fn near_zero(&self) -> bool {
+        let s = 1e-8;
+        (f32::abs(self.x) < s) && (f32::abs(self.y) < s) && (f32::abs(self.z) < s)
+    }
+
+    pub fn reflect(first: &Vec3, other: &Vec3) -> Vec3 {
+        first - (2.0 * Vec3::dot(first, other) * other)
+    }
 }
 
 macro_rules! impl_double_type_operations {

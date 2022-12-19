@@ -2,7 +2,7 @@ use std::{ops::Add, ops::Mul};
 
 use crate::{clamp, vec3::Vec3};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct Color {
     r: f32,
     g: f32,
@@ -42,6 +42,14 @@ impl Color {
             (256.0 * clamp(g, 0.0, 0.999)) as usize,
             (256.0 * clamp(b, 0.0, 0.999)) as usize
         )
+    }
+}
+
+impl Mul for Color {
+    type Output = Color;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        Color::new(self.r * rhs.r, self.g * self.g, self.b * rhs.b)
     }
 }
 
