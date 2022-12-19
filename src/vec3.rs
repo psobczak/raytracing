@@ -89,6 +89,13 @@ impl Vec3 {
     pub fn reflect(first: &Vec3, other: &Vec3) -> Vec3 {
         first - (2.0 * Vec3::dot(first, other) * other)
     }
+
+    pub fn refract(&self, other: &Vec3, etai_over_etat: f32) -> Vec3 {
+        let cos_theta = f32::min(Vec3::dot(&-self, other), 1.0);
+        let r_out_perp = etai_over_etat * (self + cos_theta * other);
+        let r_out_parallel = -f32::sqrt(f32::abs(1.0 - r_out_perp.length_squared())) * other;
+        r_out_perp + r_out_parallel
+    }
 }
 
 macro_rules! impl_double_type_operations {

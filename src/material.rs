@@ -36,6 +36,41 @@ impl Metal {
     }
 }
 
+#[derive(Debug)]
+pub struct Dielectric {
+    index_of_refraction: f32,
+}
+
+impl Dielectric {
+    pub fn new(index_of_refraction: f32) -> Self {
+        Self {
+            index_of_refraction,
+        }
+    }
+}
+
+impl Material for Dielectric {
+    fn scatter(
+        &self,
+        ray: &Ray,
+        hit_record: &HitRecord,
+        attenuation: &mut Color,
+        scattered: &mut Ray,
+    ) -> bool {
+        *attenuation = Color::new(1.0, 1.0, 1.0);
+        let refraction_ratio = match hit_record.front_face {
+            true => 1.0 / self.index_of_refraction,
+            false => self.index_of_refraction,
+        };
+
+        let unit_direction = Vec3::unit_vector(ray.direction());
+        let refracted = unit_direction.refract(&hit_record.normal, refraction_ratio);
+
+        *scattered = Ray::new(hit_record.point, refracted);
+        true
+    }
+}
+
 impl Material for Lambertian {
     fn scatter(
         &self,
