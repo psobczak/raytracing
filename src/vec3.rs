@@ -67,6 +67,10 @@ impl Vec3 {
             return point;
         }
     }
+
+    pub fn random_unit_vector() -> Vec3 {
+        Self::unit_vector(&Self::random_in_unit_sphere())
+    }
 }
 
 macro_rules! impl_double_type_operations {

@@ -35,7 +35,7 @@ impl Ray {
         }
 
         if world.hit(self, 0.001, f32::INFINITY, &mut hit_record) {
-            let target = hit_record.point + hit_record.normal + Vec3::random_in_unit_sphere();
+            let target = hit_record.point + hit_record.normal + Vec3::random_unit_vector();
             return 0.5
                 * Ray::new(hit_record.point, target - hit_record.point).color(world, depth - 1);
         }
