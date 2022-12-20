@@ -40,14 +40,19 @@ pub struct Viewport {
     focal_length: f32,
     width: f32,
     height: f32,
+    vfov: f32,
 }
 
 impl Viewport {
-    pub fn new(aspect_ratio: AspectRatio, height: f32, focal_length: f32) -> Self {
+    pub fn new(aspect_ratio: AspectRatio, focal_length: f32, vfov: f32) -> Self {
+        let theta = vfov.to_radians();
+        let h = f32::tan(theta / 2.0);
+        let height = 2.0 * h;
         Self {
             focal_length,
             height,
             width: aspect_ratio.as_f32() * height,
+            vfov,
         }
     }
 }

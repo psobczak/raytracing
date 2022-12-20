@@ -5,6 +5,7 @@ mod material;
 mod ray;
 mod render;
 mod sphere;
+mod utils;
 mod vec3;
 
 use std::rc::Rc;
@@ -12,9 +13,10 @@ use std::rc::Rc;
 use camera::{Camera, Viewport};
 use color::Color;
 use hittable::HittableList;
-use material::{Dielectric, Lambertian, Metal};
+use material::Lambertian;
 use render::{Console, Renderer};
 use sphere::Sphere;
+use utils::AspectRatio;
 use vec3::Vec3;
 
 fn main() {
@@ -22,31 +24,26 @@ fn main() {
 
     let image = Image::new(1000, aspect_ratio, 100, 25);
 
-    let material_ground = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
-    let material_center = Rc::new(Lambertian::new(Color::new(0.1, 0.2, 0.5)));
-    let material_left = Rc::new(Dielectric::new(1.5));
-    let material_right = Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2), 0.0));
+    let r = f32::cos(std::f32::consts::PI / 4.0);
+
+    let material_left = Rc::new(Lambertian::new(Color::new(0.0, 0.0, 1.0)));
+    let material_right = Rc::new(Lambertian::new(Color::new(1.0, 0.0, 0.0)));
 
     let mut world = HittableList::default();
-    world.add(Sphere::new(
-        Vec3::new(0.0, -100.5, -1.0),
-        100.0,
-        material_ground,
-    ));
-    world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, material_center));
-    world.add(Sphere::new(
-        Vec3::new(-1.0, 0.0, -1.0),
-        0.5,
-        Rc::clone(&material_left),
-    ));
-    world.add(Sphere::new(
-        Vec3::new(-1.0, 0.0, -1.0),
-        -0.4,
-        Rc::clone(&material_left),
-    ));
-    world.add(Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, material_right));
 
-    let viewport = Viewport::new(aspect_ratio, 2.0, 1.0);
+    world.add(Sphere::new(
+        Vec3::new(-r, 0.0, -1.0),
+        r,
+        Rc::clone(&material_left),
+    ));
+
+    world.add(Sphere::new(
+        Vec3::new(r, 0.0, -1.0),
+        r,
+        Rc::clone(&material_right),
+    ));
+
+    let viewport = Viewport::new(aspect_ratio, 1.0, 90.0);
     let camera = Camera::new(viewport);
 
     let console_renderer = Console::new(&image, &camera, &world);
@@ -75,30 +72,4 @@ impl Image {
             max_depth,
         }
     }
-}
-
-#[derive(Debug, Copy, Clone)]
-pub struct AspectRatio(f32, f32);
-
-impl AspectRatio {
-    pub fn as_f32(&self) -> f32 {
-        self.0 / self.1
-    }
-}
-
-impl From<(f32, f32)> for AspectRatio {
-    fn from(value: (f32, f32)) -> Self {
-        Self(value.0, value.1)
-    }
-}
-
-pub fn clamp(x: f32, min: f32, max: f32) -> f32 {
-    if x < min {
-        return min;
-    }
-    if x > max {
-        return max;
-    }
-
-    x
 }

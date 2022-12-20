@@ -1,6 +1,6 @@
 use std::{ops::Add, ops::Mul};
 
-use crate::{clamp, vec3::Vec3};
+use crate::{utils::clamp, vec3::Vec3};
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Color {
